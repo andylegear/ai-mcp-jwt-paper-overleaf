@@ -7,44 +7,65 @@
 
 \section{Introduction}\label{sec:introduction}
 
-The Model Context Protocol (MCP)~\cite{anthropic2024mcp} has rapidly become the
-dominant interface for integrating Large Language Models (LLMs) into agentic
-software systems~\cite{guo2025measurement,nsa2026mcp}. In a typical MCP deployment, an LLM orchestrator invokes
-external tools by generating structured function calls, passing arguments from
-one tool's output to the next. When those arguments include opaque, high-entropy
-credentials such as JSON Web Tokens (JWTs)~\cite{rfc7519,rfc7518}, the LLM must relay them
-\emph{verbatim}: a single altered character invalidates the RSA cryptographic
-signature~\cite{rfc6750} and produces a hard authentication failure at the downstream API.
+The Model Context Protocol (MCP)~\cite{anthropic2024mcp} is increasingly used to
+connect Large Language Models (LLMs) with external tools and
+services~\cite{guo2025measurement,nsa2026mcp}. In a typical deployment, an LLM
+orchestrator selects tools and produces structured calls whose arguments may
+carry values from one tool invocation to the next. This arrangement is useful
+for multi-step workflows, but it can place an LLM on a path that was
+traditionally handled by deterministic software components.
 
-LLMs are probabilistic next-token predictors~\cite{vaswani2017attention} built on subword
-tokenisation: Byte Pair Encoding (BPE~\cite{sennrich2016bpe}). They are not designed for byte-level verbatim
-copying. When a high-entropy credential enters an LLM's context window, the
-BPE tokeniser segments it into a non-uniform token sequence that does not
-respect character boundaries. The LLM regenerates this sequence token by
-token; we hypothesise this mechanism produces the character-level substitutions,
-truncations, and semantic reinterpretations observed in our study. In privacy-preserving architectures where
+One such path carries opaque cryptographic credentials, including JSON Web
+Tokens (JWTs)~\cite{rfc7519,rfc7518}. These values are not instructions for
+the LLM to interpret; they are integrity-critical data that a downstream
+service must receive unchanged. A single altered character can invalidate
+cryptographic verification~\cite{rfc6750} and turn an otherwise valid tool
+invocation into a hard authentication failure. The resulting fault is
+operationally significant: the affected tool call fails, there is no
+meaningful near-miss credential, and format checks may not reveal every
+corrupted value before it reaches the downstream API.
+
+This is an architectural problem rather than merely an instruction-following
+problem. Established credential-propagation patterns assume that the relaying
+components preserve the credential value exactly. An LLM, however, is a
+probabilistic component that generates a new tool-call argument rather than
+acting as a transparent transport channel. Prompt instructions may encourage
+faithful relay, but they do not create a deterministic integrity guarantee.
+In systems where authentication, signing, or authorization depends on an
+exact value, placing the credential on this path introduces a failure mode
+that the architecture must address. In privacy-preserving architectures where
 authentication and signing occur locally and the resulting credential must be
-relayed through an LLM orchestrator to a remote
-API~\cite{anonymous2026issre}, any corruption causes a
-non-recoverable authentication failure with no graceful fallback.
+relayed through an LLM orchestrator to a remote API~\cite{anonymous2026issre},
+this failure mode is directly exposed.
 
-To our knowledge, no peer-reviewed study quantifies this failure rate, and no
-published reference architecture addresses it. While adjacent work has studied LLM
-hallucination~\cite{huang2025hallucination, ji2023hallucination}, secret
-memorisation in code LLMs~\cite{nie2025decoding}, and MCP security risks through
-static analysis~\cite{abadeh2026mcp}, the specific problem of \emph{runtime}
-verbatim relay corruption of high-entropy credentials in live tool chains
-has, to our knowledge, not been characterised in prior peer-reviewed work.
+Existing work has examined unreliable LLM output, secret memorisation, and
+security risks in LLM-integrated systems~\cite{huang2025hallucination,
+ji2023hallucination, nie2025decoding, abadeh2026mcp}. These contributions are
+important but do not characterise the runtime integrity of a novel credential
+relayed through a live LLM tool chain, nor do they provide a reference
+architecture for removing that credential from the inference path. We
+therefore study the prevalence, character, and mitigability of JWT relay
+corruption, and evaluate an architectural response.
+
+Our response is the Credential Interception Vault, a reference architecture
+that moves integrity-critical credential handling to a deterministic
+boundary. Rather than requiring the LLM to reproduce a credential, the Vault
+retains the credential outside the inference path and provides a reference
+that deterministic infrastructure resolves when constructing the downstream
+request. The design follows three principles: a deterministic shell around a
+probabilistic core, credentials by reference, and model-agnosticism. It
+preserves the LLM's role in tool selection and orchestration while assigning
+byte-exact credential handling to components able to provide that property.
 
 We advance the following research proposition:
 
 \begin{quote}
-\textit{For MCP deployments that relay cryptographic credentials through LLM
-inference, our evidence strongly suggests that prompt-engineering mitigations
-are insufficient to eliminate verbatim relay corruption under current frontier
+\textit{For MCP deployments that would otherwise relay cryptographic
+credentials through LLM inference, prompt-engineering mitigations are
+insufficient to establish byte-exact relay integrity under current frontier
 models. A deterministic architectural bypass that removes the credential from
-the LLM's inference path eliminates the failure mode in the systems studied,
-independent of the model in use.}
+the inference path eliminates this direct relay failure mode in the studied
+systems, independently of the LLM used.}
 \end{quote}
 
 We structure the investigation around five research questions:
@@ -52,35 +73,36 @@ We structure the investigation around five research questions:
 \begin{itemize}[itemsep=1pt,parsep=0pt,topsep=2pt]
   \item \RQ{1}: How prevalent is JWT corruption in LLM-mediated MCP relay, and
     how does it vary across the frontier model landscape?
-  \item \RQ{2}: What is the structural and anatomical character of LLM JWT
-    corruption events?
+  \item \RQ{2}: What forms does JWT corruption take, and how are corruption
+    events distributed across credential structure and length?
   \item \RQ{3}: To what extent can prompt-engineering mitigations reduce JWT
-    corruption, and what prevents them from eliminating it?
+    corruption, and why do they not establish an integrity guarantee?
   \item \RQ{4}: How does the Credential Interception Vault reference
-    architecture structurally eliminate this failure mode?
+    architecture structurally eliminate the direct credential-relay failure mode?
   \item \RQ{5}: How is the Vault operationalised in production, and what
     evidence demonstrates its effectiveness?
 \end{itemize}
 
 This paper makes seven contributions.
-The primary goal is to establish that the problem exists at meaningful scale
-and that an architectural solution eliminates it; causal attribution of the
-underlying mechanism is a declared direction for future work
-(Section~\ref{sec:conclusion}).
+The primary goal is to establish that the failure occurs at meaningful scale
+and that an architectural solution eliminates direct credential relay; causal
+attribution of the underlying mechanism remains a declared direction for
+future work (Section~\ref{sec:conclusion}).
 \begin{enumerate}[itemsep=1pt,parsep=0pt,topsep=2pt]
     \item An empirical characterisation of JWT relay fidelity across 16
       frontier LLMs in 48{,}000 controlled L2 runs, producing a cross-model
       defect rate ranking (\Contrib{1}).
     \item A failure taxonomy distinguishing six outcome types with
       security severity ordering (\Contrib{2}).
-    \item A corruption anatomy showing length-gated, payload-concentrated
-      failure consistent with BPE tokenisation effects (\Contrib{3}).
-    \item Empirical evidence that prompt engineering is insufficient to
-      eliminate the corruption (19.9\% residual \DFR{} under production
-      instruction conditions) (\Contrib{4}).
-    \item The Credential Interception Vault, a facilitation-type reference
-      architecture~\cite{angelov2012framework} that eliminates the failure by
-      construction (\Contrib{5}).
+    \item A corruption characterisation identifying length-related and
+      credential-segment concentration patterns, providing empirical evidence
+      for examining the underlying mechanism (\Contrib{3}).
+    \item An evaluation of prompt-based mitigation showing that the tested
+      explicit production instruction does not eliminate corruption (19.9\%
+      residual \DFR{} under production instruction conditions) (\Contrib{4}).
+    \item The Credential Interception Vault, a model-agnostic reference
+      architecture that removes credentials from LLM inference and thereby
+      eliminates direct credential relay by construction (\Contrib{5}).
     \item An industrial case study validating the architecture in a
       production blockchain trading system (\Contrib{6}).
     \item An open replication package (\Contrib{7}).

@@ -4,21 +4,24 @@
 % EM-DASH PROHIBITION: Do not use --- or \textemdash. Use colons or semicolons.
 
 \begin{abstract}
-Large Language Models operating as tool-chain orchestrators must relay
-high-entropy credentials such as JSON Web Tokens (JWTs) verbatim, yet their
-subword tokenisation is associated with systematic character-level corruption
-across a substantial fraction of attempts. We report a controlled experiment
-($N\!=\!48{,}000$ L2 runs across 16 frontier LLMs) measuring the JWT
-Defect/Failure Rate (DFR), an ecological validity arm ($N\!=\!1{,}600$)
-replicating the study under production conditions, and an industrial case study
-validating a novel reference architecture. The overall DFR is 18.0\% (range
-0.5--99.8\%; 12.5\% excluding the Mistral Large~3 outlier). Corruption is
-length-gated and payload-concentrated. Even the most explicit production
-instruction leaves a residual DFR of 19.9\% ($+1.9$~pp vs.\ neutral,
-$p\!=\!0.16$): a null result for the prompt-engineering mitigation tested under
-production conditions; formal equivalence testing remains future work. We propose the Credential Interception Vault, a
-reference architecture grounded in three design principles (deterministic
-shell/probabilistic core, credentials by reference, model-agnosticism) that
-removes the credential from the LLM inference path entirely, achieving zero
-byte-relay failures by construction and validated in a production fintech deployment.
+Large Language Models (LLMs) increasingly orchestrate tool chains that invoke
+external services. When such a chain carries an opaque cryptographic
+credential, such as a JSON Web Token (JWT), the credential must remain
+byte-for-byte unchanged: a one-character deviation can cause downstream
+authentication to fail. We report a controlled experiment of credential relay
+through LLM-mediated Model Context Protocol (MCP) tool chains
+($N\!=\!48{,}000$ L2 runs across 16 frontier LLMs), an ecological validity arm
+that reproduces a production setting ($N\!=\!1{,}600$), and an industrial case
+study. Across the controlled L2 runs, the JWT Defect/Failure Rate (DFR) was
+18.0\% (range 0.5--99.8\%; 12.5\% excluding the Mistral Large~3 outlier).
+Failures increased with credential length and were concentrated in the
+payload. In the production-condition arm, an explicit relay instruction left
+a residual DFR of 19.9\% (1.9 percentage points above the neutral condition,
+$p\!=\!0.16$), providing no evidence that the tested prompt-based mitigation
+eliminates the failure mode. To address this integrity risk, we propose the
+Credential Interception Vault, a reference architecture that separates
+deterministic credential handling from probabilistic LLM orchestration, uses
+credentials by reference, and is model-agnostic. By removing credentials from
+the LLM inference path, the architecture eliminates direct byte relay by
+construction; we validate it in a production fintech deployment.
 \end{abstract}
