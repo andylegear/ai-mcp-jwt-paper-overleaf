@@ -72,10 +72,11 @@ untrusted environments.
 
 \begin{figure*}[t]
   \centering
-  \includegraphics[width=0.78\textwidth]{figures/fig03_c4_container.png}
+  \includegraphics[width=0.99\textwidth]{figures/fig03_c4_container.png}
   \vspace{-4pt}\caption{Container-level view of the Credential Interception Vault
-  reference architecture. The Vault (centre, bold red) is the invariant.
-  Hatched elements are variability points \texttt{[VP]}.
+  reference architecture. The Vault (centre, red) is the invariant.
+  Blue elements are variability points \texttt{[VP]}; grey elements are
+  external actors/systems.
   Handle security model: see Section~\ref{sec:security}.}
   \label{fig:c4}
 \end{figure*}
@@ -99,7 +100,7 @@ arguments (\emph{inject}). No LLM re-encoding occurs between cache and injection
 
 \begin{figure*}[t]
   \centering
-  \includegraphics[width=0.68\textwidth]{figures/fig04_sequence.png}
+  \includegraphics[width=0.75\textwidth]{figures/fig04_sequence.png}
   \vspace{-4pt}\caption{Intercept-cache-inject sequence for one credential relay cycle.
   The credential never enters the LLM context window. Steps 5--6 (red):
   intercept and cache. Steps 10--12 (green): resolve and inject.}
