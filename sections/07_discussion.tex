@@ -1,0 +1,65 @@
+% Section 7: Discussion
+% Source: context/Discussion_and_Conclusions.md §D2-D8
+% Source: context/ICSA_RA_Literature_Review.md §12
+%
+% EM-DASH PROHIBITION: Do not use --- or \textemdash. Use colons or semicolons.
+
+\section{Discussion}\label{sec:discussion}
+
+The empirical findings and case study evidence converge on a single conclusion:
+LLM credential relay corruption is a systematic failure mode that prompt
+engineering did not eliminate in any condition tested, motivating an architectural
+response. We discuss six implications.
+
+\textbf{Prompt engineering as insufficient mitigation.}
+The production system deployed the most explicit bearerToken instruction
+achievable within the MCP tool schema (318 characters naming the RSA mechanism,
+the 403 consequence, and single-character precision). It produced 19.9\%
+\DFR{} ($p\!=\!0.16$; a null result, not a positive equivalence claim). BPE tokenisation
+boundaries \emph{appear} to operate below the instruction-following layer; no
+instruction eliminated corruption in any of the 16 models tested. In the conditions
+evaluated, prompt improvement was bounded at $\sim$5~pp (L1-to-L3) with no approach toward zero. We present
+this as an \emph{observed practical insufficiency}: the most aggressive prompting
+strategy available under MCP schema constraints did not reduce \DFR{} to an
+acceptable level for cryptographic relay. Formal equivalence testing (TOST with a pre-specified margin)
+remains future work; the current finding is sufficient to motivate an
+architectural bypass.
+
+\textbf{Mitigation vs.\ bypass: a category difference.}
+The Vault achieves zero \DFR{} by construction for the byte-relay property
+(a design argument, not an additional empirical measurement): removing the
+credential from inference makes byte-level corruption architecturally
+impossible. This guarantee is scoped to relay fidelity; it does not address
+credential theft at rest, token expiry, revocation, or replay attacks;
+those remain the responsibility of the surrounding identity infrastructure. Prompt-based mitigation asks how to
+make the LLM relay more reliably; \DFR{} remains above zero. These are
+solutions to different problems. Bypass is appropriate when correctness is
+required (RSA verification is binary), when the failure is
+unrecoverable (HTTP~403 with no retry), and when credentials are sensitive personal data~\cite{gdpr2016}.
+
+\textbf{When to apply the Vault.}
+Apply when: (i)~credential length exceeds $\sim$200~chars;
+(ii)~a cryptographic signature is present; or (iii)~a relay error is unrecoverable.
+Prompt mitigation may suffice in retry-tolerant contexts below that threshold.
+
+\textbf{Organic convergence validates the RA.}
+The production Vault was implemented independently without reference to
+this research (Section~\ref{sec:trajectory}), confirming the RA as
+naturally emergent and transferable without requiring rediscovery.
+
+\textbf{Credential lengths are increasing; the risk may worsen.}
+Gibberish bias intensifies with larger vocabularies~\cite{chen2026gibberish}.
+NIST key sizes~\cite{barker2020nistkeys} and post-quantum
+algorithms~\cite{nist2024pqc} (CRYSTALS-Dilithium: 2{,}420~bytes; SPHINCS+:
+7{,}856~bytes) would push tokens deeper into the high-\DFR{} tier, making 17.3\% a
+conservative lower bound (this projection requires empirical validation). The
+Vault addresses this trajectory without modification.
+
+\textbf{Broader implications for agentic AI systems.}
+As LLM-based agent systems proliferate~\cite{wang2024survey}, any opaque
+high-entropy string (API keys, hash digests, certificate fragments) may share
+the same distribution-shift vulnerability. JWT relay is the validated case;
+extension to other credential classes is a hypothesis requiring independent
+empirical confirmation. The eco arm
+($\rho\!=\!0.740$) provides a reusable calibration instrument for
+deployment-specific risk.

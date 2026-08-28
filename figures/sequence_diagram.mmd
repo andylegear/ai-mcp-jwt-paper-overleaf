@@ -1,0 +1,43 @@
+%%{init: {'theme': 'default', 'themeVariables': {'fontSize': '16px', 'fontFamily': 'Arial'}}}%%
+sequenceDiagram
+    autonumber
+    participant SC as Service Consumer
+    participant DA as Decision-Making<br/>Agent
+    participant V as Credential<br/>Interception Vault
+    participant CT as Credential-Bearing<br/>Tool [VP]
+    participant LLM as LLM Inference<br/>Provider
+    participant AT as Authenticated<br/>Tool [VP]
+    participant PR as Protected<br/>Resource [VP]
+
+    SC->>DA: Natural language request
+
+    Note over DA,LLM: Phase 1: Credential Acquisition
+    DA->>LLM: Conversation context + tool schemas<br/>(no credential values)
+    LLM-->>DA: Tool invocation intent:<br/>call credential_tool
+
+    DA->>CT: MCP call: acquire credential
+    CT-->>V: Tool result: credential value<br/>(e.g. JWT eyJhbGc...)
+
+    rect rgb(255, 235, 235)
+        Note over V: INTERCEPT: Vault captures<br/>credential before LLM context
+        V->>V: Cache credential under<br/>fresh opaque handle (§ref:abc123)
+    end
+
+    V-->>DA: Modified result:<br/>token = "§ref:abc123"<br/>(credential withheld from LLM)
+
+    Note over DA,LLM: Phase 2: Authenticated Operation
+    DA->>LLM: Context with opaque handle only<br/>(LLM never sees raw credential)
+    LLM-->>DA: Tool invocation intent:<br/>call authenticated_tool<br/>(token = "§ref:abc123")
+
+    DA->>V: Tool call contains handle:<br/>resolve "§ref:abc123"
+
+    rect rgb(235, 255, 235)
+        Note over V: INJECT: Vault substitutes<br/>cached credential into tool args
+        V->>V: Lookup: §ref:abc123<br/>→ eyJhbGc... (verbatim)
+    end
+
+    V->>AT: MCP call with real credential<br/>injected (deterministic bypass<br/>of LLM relay)
+    AT->>PR: Authenticated request<br/>(credential guaranteed verbatim)
+    PR-->>AT: Response
+    AT-->>DA: Tool result
+    DA-->>SC: Natural language response

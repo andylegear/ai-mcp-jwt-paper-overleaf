@@ -1,0 +1,44 @@
+% Section 8: Threats to Validity
+% Source: context/Discussion_and_Conclusions.md §D9
+%
+% EM-DASH PROHIBITION: Do not use --- or \textemdash. Use colons or semicolons.
+
+\section{Threats to Validity}\label{sec:threats}
+
+\textbf{Construct validity.}
+The binary \DFR{} metric does not capture corruption severity, but RSA
+verification is itself binary (any distance $>0$ is fatal), making the metric
+appropriate. Synthetic JWTs may under-represent real-world complexity; the eco
+arm mitigates this by running with the exact production schema
+($\sim$1{,}080~chars, RS256 Azure AD B2C) and obtaining
+\DFR{}~=~19.9\%, statistically indistinguishable from the synthetic result.
+
+\textbf{Internal validity.}
+Experiments used direct provider API calls; identical corruption patterns
+across six independent provider SDKs make a middleware artifact implausible.
+All models were accessed under pinned version identifiers during a fixed
+collection window of 3--7~July~2026; any residual within-study drift is
+accounted for by the GEE clustering structure. Provider back-end updates
+between study start and end could introduce uncontrolled variance; the fixed
+collection window and version pinning limit but do not eliminate this risk.
+The tokenisation hypothesis is the most parsimonious explanation for the
+observed length-gating pattern; alternative mechanisms (tool-call
+serialisation artefacts, provider SDK transforms, safety-layer rewrites)
+have not been experimentally ruled out. Causal attribution is out of scope
+for this study, whose primary contribution is demonstrating that the problem
+exists at meaningful scale and that an architectural bypass eliminates it.
+
+\textbf{External validity.}
+The 16 models cover eight tiers and six providers but do not represent
+the full model landscape; new models may exhibit different failure profiles.
+The eco arm's $\rho\!=\!0.740$ rank correlation supports transfer to at least one
+production deployment; generalisation to other credential types or schemas
+requires future work (Section~\ref{sec:discussion}).
+Per-model eco breakdowns are in the replication package.
+
+\textbf{Conclusion validity.}
+Multiple comparisons across 16 models inflate Type~I error; all pairwise
+comparisons are corrected by Benjamini-Hochberg at FDR~=~0.05. The primary
+inference (\DFR{} $> 0$\% across all models) is a single test with effectively
+unlimited power at $N\!=\!50{,}400$. The analysis plan was pre-registered
+before data collection to reduce observer bias.

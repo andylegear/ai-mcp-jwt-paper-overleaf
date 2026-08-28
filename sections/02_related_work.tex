@@ -1,0 +1,104 @@
+% Section 2: Related Work
+% Source: context/Related Work Literature Review.md (all 5 areas)
+% Source: context/ICSA_RA_Literature_Review.md §11 (reference quality, paper-section mapping)
+% Source: context/ICSA_RA_Literature_Review.md §7.3 (Swiss Cheese differentiation)
+% Source: context/ICSA_RA_Literature_Review.md §7.4 (ACE citation strategy)
+% Source: context/ICSA_RA_Literature_Review.md §11.4 (Chen et al., Abadeh et al. differentiation)
+%
+% EM-DASH PROHIBITION: Do not use --- or \textemdash. Use colons or semicolons.
+
+\section{Related Work}\label{sec:related_work}
+
+\subsubsection*{LLM Output Fidelity}
+LLM outputs are unreliable in ways that extend beyond factual
+hallucination~\cite{huang2025hallucination, ji2023hallucination}. Nie et
+al.~\cite{nie2025decoding} study how code LLMs handle secrets at the token
+level, focusing on memorisation risk: the unintended reproduction of
+training-data credentials. No prior work studies the complementary failure: the
+\emph{corruption} of novel, unseen credentials when an LLM relays them at
+inference time through a tool chain. This gap defines the empirical contribution
+of the present study.
+
+\subsubsection*{Tokenisation and String Integrity}
+Byte Pair Encoding (BPE)~\cite{sennrich2016bpe} segments input into subword
+tokens using merge rules from a training corpus. Applied to high-entropy strings
+such as JWTs, BPE produces a non-uniform distribution that Chen et
+al.~\cite{chen2026gibberish} term \emph{gibberish bias}: accidental
+natural-language fragments (e.g., ``cut'' inside Base64url) merge into single
+tokens while adjacent characters receive individual slots. Chen et al.\ measure
+KL divergence of 2.668 between credential-string and normal-code token
+distributions, and show the effect intensifies with vocabulary size (the current
+scaling trajectory). We hypothesise this same distributional shift underlies
+the relay fidelity failures we observe: rather than enabling memorised secret
+reproduction, it impedes accurate relay of novel credential strings.
+Chen et al.'s work concerns training-data secret \emph{leakage}, not
+inference-time relay of novel credentials.
+
+\subsubsection*{MCP and Agentic AI Security}
+The Model Context Protocol~\cite{anthropic2024mcp} enables LLMs to invoke
+external tools through structured function calls. Schick et
+al.~\cite{schick2023toolformer} established that LLMs can learn tool use; He et
+al.~\cite{he2025security} survey the resulting security and privacy risks
+across the broader LLM agent landscape. Abadeh et al.~\cite{abadeh2026mcp}
+provide the first peer-reviewed study of MCP-specific vulnerabilities, scanning
+server configurations for privilege escalation and injection risks. Their
+approach is complementary: static scanning examines infrastructure-level
+configuration; our study addresses a runtime failure mode that arises during
+live LLM inference and falls outside the scope of static analysis. Greshake et
+al.~\cite{greshake2023prompt} and Liu et al.~\cite{liu2024prompt} study prompt
+injection attacks on LLM-integrated applications; the Vault architecture we
+propose incidentally mitigates indirect prompt injection targeting credentials,
+as the credential never enters the LLM context.
+
+\subsubsection*{Function-Call and Tool-Use Reliability}
+Song et al.~\cite{song2025callnavi} find systematic argument misgeneration
+in LLM function-calling across diverse API schemas; Yu
+et al.~\cite{yu2026wildtoolbench} report compounding errors in multi-step
+tool-use, with both studies tolerating near-miss outputs that constitute a hard
+cryptographic failure in our setting. Haque et al.~\cite{haque2026verbatim}
+study high-entropy string transcription failures in LLM code generation; that
+work does not address credential relay.
+
+\subsubsection*{Credential Relay in Distributed Systems}
+The challenge of securely propagating bearer tokens across distributed
+components is well-documented in microservice architectures. Yarygina and
+Bagge~\cite{yarygina2018microservice} identify token propagation as a primary
+security challenge in microservices. These patterns exist for deterministic
+microservices, but they fail when a probabilistic LLM is introduced into the
+relay chain: the LLM is not a transparent relay component but an active
+transformer of its input. To our knowledge, no prior work addresses bearer
+token integrity when the relay component is a stochastic language model.
+
+\subsubsection*{Reference Architectures for LLM Agent Systems}
+The Swiss Cheese Model for AI Safety~\cite{shamsujjoha2025swisscheese},
+published at ICSA~2025, proposes a multi-layer guardrail reference architecture
+for foundation model agents, inspired by Reason's accident causation model~\cite{reason1990human}. While
+conceptually adjacent, it addresses general agent failure modes (hallucination,
+misalignment, prompt injection) through stacked defensive layers. The failure
+mode we study is distinct: verbatim credential relay corruption produces
+well-formed but cryptographically invalid output that passes format validation at
+every Swiss Cheese layer. Our architectural response is also distinct: rather
+than adding layers around LLM inference, the Credential Interception Vault
+removes the credential from the inference path entirely. The two architectures
+are complementary. Li et al.'s ACE architecture~\cite{li2026ace}, published at
+NDSS~2026, isolates LLM plan generation from deterministic execution to prevent
+prompt injection. We apply the same separation principle to a different failure
+mode: verbatim string relay fidelity. In both cases, deterministic correctness
+guarantees cannot be provided by a probabilistic component, regardless of the
+operation's apparent simplicity.
+
+Grammar-constrained decoding~\cite{geng2023grammar} cannot guarantee byte-level
+fidelity of opaque strings: BPE tokenisation fragments the credential before
+generation begins, and no grammar can reconstruct a specific byte sequence
+already split across merge boundaries. OAuth~2.0 Token Exchange
+(RFC~8693~\cite{rfc8693}) assumes a deterministic relay agent; the stochastic
+byte-level transformation we measure is outside its threat model.
+
+The RA canon provides the classification framework for our contribution.
+Following Angelov et al.~\cite{angelov2012framework}, we classify the Vault as
+a Type~2 facilitation-type RA: designed by researchers to guide practitioners,
+with voluntary adoption. Galster and Avgeriou~\cite{galster2011empirically}
+propose a six-step methodology for empirically-grounded RAs; our study
+satisfies all six steps (Section~\ref{sec:ra_type}).
+
+

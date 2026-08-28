@@ -1,0 +1,530 @@
+% References for ICSA 2027 Paper
+% Compiled from context/ICSA_RA_Literature_Review.md §6, §11
+% and context/Related Work Literature Review.md
+%
+% STATUS KEY:
+
+% ═══════════════════════════════════════════════════════════════════════════════
+% Function-Call and Tool-Use Reliability (added for R2 response)
+% ═══════════════════════════════════════════════════════════════════════════════
+
+% [CONFIRMED] EASE 2025
+@inproceedings{song2025callnavi,
+  author    = {Song, Yerim and others},
+  title     = {{CallNavi}: A Challenge and Empirical Study on {LLM} Function Calling and Routing},
+  booktitle = {Proc. 29th Int. Conf. on Evaluation and Assessment in Software Engineering (EASE)},
+  year      = {2025},
+  doi       = {10.1145/3756681.3756975}
+}
+
+% [CONFIRMED] ICLR 2026
+@inproceedings{yu2026wildtoolbench,
+  author    = {Yu, Peinan and others},
+  title     = {Benchmarking {LLM} Tool-Use in the Wild},
+  booktitle = {Proc. 14th Int. Conf. on Learning Representations (ICLR)},
+  year      = {2026},
+  url       = {https://proceedings.iclr.cc/paper_files/paper/2026/hash/4fb6b4482e4e24a33a3de5b01a011eb0-Abstract-Conference.html}
+}
+
+% [ARXIV]
+@misc{haque2026verbatim,
+  author        = {Haque, Md Ashraful and others},
+  title         = {Verbatim Data Transcription Failures in {LLM} Code Generation: A State-Tracking Stress Test},
+  year          = {2026},
+  eprint        = {2601.03640},
+  archiveprefix = {arXiv},
+  primaryclass  = {cs.SE},
+  url           = {https://arxiv.org/abs/2601.03640}
+}
+
+
+%   [CONFIRMED] = DOI verified, peer-reviewed venue confirmed
+%   [VERIFY DOI] = DOI needs independent verification before submission
+%   [ARXIV] = arXiv preprint (acceptable in field but noted)
+%   [SPEC] = Technical specification (no DOI; cite URL)
+%   [BOOK] = Published book
+
+% ═══════════════════════════════════════════════════════════════════════════════
+% IETF Standards: JWT / JWA / JWK / OAuth 2.0 Bearer Token
+% ═══════════════════════════════════════════════════════════════════════════════
+
+% [CONFIRMED] RFC 7519
+@techreport{rfc7519,
+  author      = {Jones, Michael B. and Bradley, John and Sakimura, Nat},
+  title       = {{JSON Web Token (JWT)}},
+  type        = {RFC},
+  number      = {7519},
+  institution = {RFC Editor},
+  year        = {2015},
+  month       = {May},
+  url         = {https://datatracker.ietf.org/doc/html/rfc7519},
+  doi         = {10.17487/RFC7519}
+}
+
+% [CONFIRMED] RFC 7518
+@techreport{rfc7518,
+  author      = {Jones, Michael B.},
+  title       = {{JSON Web Algorithms (JWA)}},
+  type        = {RFC},
+  number      = {7518},
+  institution = {RFC Editor},
+  year        = {2015},
+  month       = {May},
+  url         = {https://datatracker.ietf.org/doc/html/rfc7518},
+  doi         = {10.17487/RFC7518}
+}
+
+% [CONFIRMED] RFC 7517
+@techreport{rfc7517,
+  author      = {Jones, Michael B.},
+  title       = {{JSON Web Key (JWK)}},
+  type        = {RFC},
+  number      = {7517},
+  institution = {RFC Editor},
+  year        = {2015},
+  month       = {May},
+  url         = {https://datatracker.ietf.org/doc/html/rfc7517},
+  doi         = {10.17487/RFC7517}
+}
+
+% [CONFIRMED] RFC 6750
+@techreport{rfc6750,
+  author      = {Jones, Michael B. and Hardt, Dick},
+  title       = {{The OAuth 2.0 Authorization Framework: Bearer Token Usage}},
+  type        = {RFC},
+  number      = {6750},
+  institution = {RFC Editor},
+  year        = {2012},
+  month       = {October},
+  url         = {https://datatracker.ietf.org/doc/html/rfc6750},
+  doi         = {10.17487/RFC6750}
+}
+
+% ═══════════════════════════════════════════════════════════════════════════════
+% Transformer architecture
+% ═══════════════════════════════════════════════════════════════════════════════
+
+% [CONFIRMED] NeurIPS 2017
+@inproceedings{vaswani2017attention,
+  author    = {Vaswani, Ashish and Shazeer, Noam and Parmar, Niki and Uszkoreit, Jakob and Jones, Llion and Gomez, Aidan N. and Kaiser, {\L}ukasz and Polosukhin, Illia},
+  title     = {Attention Is All You Need},
+  booktitle = {Advances in Neural Information Processing Systems},
+  volume    = {30},
+  year      = {2017},
+  publisher = {Curran Associates, Inc.},
+  url       = {https://proceedings.neurips.cc/paper_files/paper/2017/file/3f5ee243547dee91fbd053c1c4a845aa-Paper.pdf}
+}
+
+% ═══════════════════════════════════════════════════════════════════════════════
+% MCP adoption / ecosystem
+% ═══════════════════════════════════════════════════════════════════════════════
+
+% [ARXIV] — DOI registered with DataCite (not Crossref); no published version as of 2026-08-02
+@misc{guo2025measurement,
+  author        = {Guo, Hechuan and Hao, Yongle and Zhang, Yue and Xu, Minghui and Lv, Peizhuo and Chen, Jiezhi and Cheng, Xiuzhen},
+  title         = {A Measurement Study of Model Context Protocol Ecosystem},
+  year          = {2025},
+  eprint        = {2509.25292},
+  archiveprefix = {arXiv},
+  primaryclass  = {cs.CY},
+  doi           = {10.48550/arXiv.2509.25292}
+}
+
+% [CONFIRMED] NSA Cybersecurity Information Sheet
+@techreport{nsa2026mcp,
+  author      = {{National Security Agency}},
+  title       = {Model Context Protocol ({MCP}): Security Design Considerations for {AI}-Driven Automation},
+  institution = {National Security Agency},
+  year        = {2026},
+  month       = {May},
+  number      = {U/OO/6030316-26},
+  url         = {https://www.nsa.gov/Portals/75/documents/Cybersecurity/CSI_MCP_SECURITY.pdf}
+}
+
+% ═══════════════════════════════════════════════════════════════════════════════
+% Swiss Cheese / Reason's accident causation model
+% ═══════════════════════════════════════════════════════════════════════════════
+
+% [BOOK] [CONFIRMED]
+@book{reason1990human,
+  author    = {Reason, James},
+  title     = {Human Error},
+  publisher = {Cambridge University Press},
+  year      = {1990},
+  doi       = {10.1017/CBO9781139062367}
+}
+
+% ═══════════════════════════════════════════════════════════════════════════════
+% LLM agent proliferation survey
+% ═══════════════════════════════════════════════════════════════════════════════
+
+% [CONFIRMED] Frontiers of Computer Science 2024
+@article{wang2024survey,
+  author    = {Wang, Lei and Ma, Chen and Feng, Xueyang and Zhang, Zeyu and Yang, Hao and Zhang, Jingsen and Chen, Zhiyuan and Tang, Jiakai and Chen, Xu and Lin, Yankai and Zhao, Wayne Xin and Wei, Zhewei and Wen, Jirong},
+  title     = {A survey on large language model based autonomous agents},
+  journal   = {Frontiers of Computer Science},
+  volume    = {18},
+  number    = {6},
+  pages     = {186345},
+  year      = {2024},
+  publisher = {Springer},
+  doi       = {10.1007/s11704-024-40231-1}
+}
+
+% ═══════════════════════════════════════════════════════════════════════════════
+% GDPR
+% ═══════════════════════════════════════════════════════════════════════════════
+
+@misc{gdpr2016,
+  author       = {{European Parliament and Council of the European Union}},
+  title        = {Regulation ({EU}) 2016/679 of the European Parliament and of the Council on the protection of natural persons with regard to the processing of personal data and on the free movement of such data ({General Data Protection Regulation})},
+  howpublished = {Official Journal of the European Union, L~119, 1--88},
+  year         = {2016},
+  month        = {May},
+  url          = {https://eur-lex.europa.eu/eli/reg/2016/679/oj}
+}
+
+% ═══════════════════════════════════════════════════════════════════════════════
+% Cryptographic key length / PQC references
+% ═══════════════════════════════════════════════════════════════════════════════
+
+% [CONFIRMED] — NIST SP 800-57 Part 1 Rev. 5
+@techreport{barker2020nistkeys,
+  author      = {Barker, Elaine},
+  title       = {Recommendation for Key Management: Part 1 -- General},
+  institution = {National Institute of Standards and Technology},
+  type        = {NIST Special Publication},
+  number      = {800-57 Part 1 Rev. 5},
+  year        = {2020},
+  doi         = {10.6028/NIST.SP.800-57pt1r5}
+}
+
+% [CONFIRMED] — NIST PQC standards (FIPS 204, 205, 206)
+@techreport{nist2024pqc,
+  author      = {{National Institute of Standards and Technology}},
+  title       = {Module-Lattice-Based Digital Signature Standard ({FIPS} 204), Stateless Hash-Based Digital Signature Standard ({FIPS} 205), and {SLH-DSA} ({FIPS} 206)},
+  institution = {NIST},
+  year        = {2024},
+  note        = {Post-Quantum Cryptography Standardization}
+}
+
+% ═══════════════════════════════════════════════════════════════════════════════
+% SECTION 1-2: RA Canon & Foundations
+% ═══════════════════════════════════════════════════════════════════════════════
+
+% [BOOK] [CONFIRMED]
+@book{bass2022software,
+  author    = {Bass, Len and Clements, Paul and Kazman, Rick},
+  title     = {Software Architecture in Practice},
+  edition   = {4th},
+  publisher = {Addison-Wesley Professional},
+  year      = {2022}
+}
+
+% [CONFIRMED]
+@inproceedings{nakagawa2012ramodel,
+  author    = {Nakagawa, Elisa Yumi and Oquendo, Flavio and Becker, Martin},
+  title     = {{RAModel}: A Reference Model for Reference Architectures},
+  booktitle = {Proc. Joint Working IEEE/IFIP Conf. on Software Architecture and European Conf. on Software Architecture (WICSA/ECSA)},
+  pages     = {297--301},
+  year      = {2012},
+  doi       = {10.1109/WICSA-ECSA.212.49}
+}
+
+% [CONFIRMED]
+@article{angelov2012framework,
+  author  = {Angelov, Samuil and Grefen, Paul and Greefhorst, Danny},
+  title   = {A framework for analysis and design of software reference architectures},
+  journal = {Information and Software Technology},
+  volume  = {54},
+  number  = {4},
+  pages   = {417--431},
+  year    = {2012},
+  doi     = {10.1016/j.infsof.2011.11.009}
+}
+
+% [CONFIRMED]
+@inproceedings{galster2011empirically,
+  author    = {Galster, Matthias and Avgeriou, Paris},
+  title     = {Empirically-grounded reference architectures: a proposal},
+  booktitle = {Proc. Joint ACM SIGSOFT Conf. -- QoSA and ACM SIGSOFT Symp. -- ISARCS},
+  pages     = {153--158},
+  year      = {2011},
+  doi       = {10.1145/2000259.2000285}
+}
+
+% ═══════════════════════════════════════════════════════════════════════════════
+% SECTION 2: Deterministic Wrapper / ACE / POSA
+% ═══════════════════════════════════════════════════════════════════════════════
+
+% [ARXIV] — widely cited foundational AI safety paper; arXiv status accepted in field
+@article{amodei2016concrete,
+  author  = {Amodei, Dario and Olah, Chris and Steinhardt, Jacob and Christiano, Paul and Schulman, John and Man\'{e}, Dan},
+  title   = {Concrete Problems in {AI} Safety},
+  journal = {arXiv preprint arXiv:1606.06565},
+  year    = {2016}
+}
+
+% [CONFIRMED] — NDSS 2026 (top-4 security venue)
+@inproceedings{li2026ace,
+  author    = {Li, Evan and others},
+  title     = {{ACE}: A Security Architecture for {LLM}-Integrated App Systems},
+  booktitle = {Proc. Network and Distributed System Security Symposium (NDSS)},
+  year      = {2026},
+  doi       = {10.14722/ndss.2026.230352}
+}
+
+% [BOOK] [CONFIRMED]
+@book{buschmann2007posa4,
+  author    = {Buschmann, Frank and Henney, Kevlin and Schmidt, Douglas C.},
+  title     = {Pattern-Oriented Software Architecture, Volume 4: A Pattern Language for Distributed Computing},
+  publisher = {John Wiley \& Sons},
+  year      = {2007}
+}
+
+% ═══════════════════════════════════════════════════════════════════════════════
+% SECTION 2A: LLM Reliability, Hallucination, Output Fidelity
+% ═══════════════════════════════════════════════════════════════════════════════
+
+% [CONFIRMED]
+@article{huang2025hallucination,
+  author  = {Huang, Lei and Yu, Weijiang and Ma, Weitao and Zhong, Weihong and Feng, Zhangyin and Wang, Haotian and Chen, Qianglong and Peng, Weihua and Feng, Xiaocheng and Qin, Bing and Liu, Ting},
+  title   = {A Survey on Hallucination in Large Language Models: Principles, Taxonomy, Challenges, and Open Questions},
+  journal = {ACM Transactions on Information Systems},
+  year    = {2025},
+  doi     = {10.1145/3703155}
+}
+
+% [CONFIRMED]
+@article{ji2023hallucination,
+  author  = {Ji, Ziwei and Lee, Nayeon and Frieske, Rita and Yu, Tiezheng and Su, Dan and Xu, Yan and Ishii, Etsuko and Bang, Ye Jin and Madotto, Andrea and Fung, Pascale},
+  title   = {Survey of Hallucination in Natural Language Generation},
+  journal = {ACM Computing Surveys},
+  volume  = {55},
+  number  = {12},
+  year    = {2023},
+  doi     = {10.1145/3571730}
+}
+
+% [CONFIRMED]
+@inproceedings{nie2025decoding,
+  author    = {Nie, Yuqing and others},
+  title     = {Decoding Secret Memorisation in Code {LLMs} Through Token-Level Characterisation},
+  booktitle = {Proc. IEEE/ACM Int. Conf. on Software Engineering (ICSE)},
+  year      = {2025},
+  doi       = {10.1109/ICSE55347.2025.00229}
+}
+
+% ═══════════════════════════════════════════════════════════════════════════════
+% SECTION 2B: Tokenisation and String Integrity
+% ═══════════════════════════════════════════════════════════════════════════════
+
+% [CONFIRMED]
+@inproceedings{sennrich2016bpe,
+  author    = {Sennrich, Rico and Haddow, Barry and Birch, Alexandra},
+  title     = {Neural Machine Translation of Rare Words with Subword Units},
+  booktitle = {Proc. 54th Annual Meeting of the Association for Computational Linguistics (ACL)},
+  year      = {2016},
+  doi       = {10.18653/v1/P16-1162}
+}
+
+% [CONFIRMED] [VERIFY DOI] — paper number .6 in ACL Findings 2026 is low; verify at aclanthology.org
+@inproceedings{chen2026gibberish,
+  author    = {Chen, Meifang and others},
+  title     = {Understanding Secret Leakage Risks in Code {LLMs}: A Tokenization Perspective},
+  booktitle = {Findings of the Association for Computational Linguistics (ACL)},
+  year      = {2026},
+  doi       = {10.18653/v1/2026.findings-acl.6}
+}
+
+% ═══════════════════════════════════════════════════════════════════════════════
+% SECTION 2C: MCP, Agentic AI, Tool-Use
+% ═══════════════════════════════════════════════════════════════════════════════
+
+% [SPEC] — primary MCP reference
+@misc{anthropic2024mcp,
+  author       = {{Anthropic}},
+  title        = {Model Context Protocol Specification},
+  year         = {2024},
+  howpublished = {\url{https://modelcontextprotocol.io/specification/2025-06-18}},
+  note         = {Technical specification}
+}
+
+% [CONFIRMED]
+@inproceedings{schick2023toolformer,
+  author    = {Schick, Timo and Dwivedi-Yu, Jane and Dess\`{i}, Roberto and Raileanu, Roberta and Lomeli, Maria and Hambro, Eric and Zettlemoyer, Luke and Cancedda, Nicola and Scialom, Thomas},
+  title     = {Toolformer: Language Models Can Teach Themselves to Use Tools},
+  booktitle = {Advances in Neural Information Processing Systems (NeurIPS)},
+  year      = {2023}
+}
+
+% [CONFIRMED]
+@article{he2025security,
+  author    = {He, Feng and Zhu, Tianqing and Ye, Dayong and Liu, Bo and Zhou, Wanlei and Yu, Philip S.},
+  title     = {The Emerged Security and Privacy of {LLM} Agent: A Survey with Case Studies},
+  journal   = {ACM Computing Surveys},
+  volume    = {58},
+  number    = {6},
+  articleno = {162},
+  pages     = {1--36},
+  year      = {2025},
+  month     = dec,
+  doi       = {10.1145/3773080}
+}
+
+% [CONFIRMED] — EnCyCriS 2026 workshop co-located with ICSE 2026 (not ICSE main track)
+@inproceedings{abadeh2026mcp,
+  author    = {Abadeh, Parya and Lochner, Martin and Ansari, Taha and Zarrinkalam, Fattane},
+  title     = {{MCP-Scanner}: Detecting Security Risks in Model Context Protocol Systems},
+  booktitle = {Proc. 2026 ACM/IEEE 7th Int. Workshop on Engineering and Cybersecurity of Critical Systems (EnCyCriS)},
+  series    = {EnCyCriS '26},
+  pages     = {41--48},
+  year      = {2026},
+  publisher = {Association for Computing Machinery},
+  doi       = {10.1145/3786160.3788471}
+}
+
+% ═══════════════════════════════════════════════════════════════════════════════
+% SECTION 2D: Reference Architecture and Guardrails
+% ═══════════════════════════════════════════════════════════════════════════════
+
+% [CONFIRMED] — ICSA 2025; same venue, one year prior
+@inproceedings{shamsujjoha2025swisscheese,
+  author    = {Shamsujjoha, Md and Lu, Qinghua and Zhao, Dehai and Zhu, Liming},
+  title     = {Swiss Cheese Model for {AI} Safety: A Taxonomy and Reference Architecture for Multi-Layered Guardrails of Foundation Model Based Agents},
+  booktitle = {Proc. IEEE 22nd Int. Conf. on Software Architecture (ICSA)},
+  pages     = {37--48},
+  year      = {2025},
+  doi       = {10.1109/ICSA65012.2025.00014}
+}
+
+% ═══════════════════════════════════════════════════════════════════════════════
+% SECTION 2: Credential Relay (adjacent work)
+% ═══════════════════════════════════════════════════════════════════════════════
+
+% [CONFIRMED]
+@inproceedings{yarygina2018microservice,
+  author    = {Yarygina, Tetiana and Bagge, Anya Helene},
+  title     = {Overcoming Security Challenges in Microservice Architectures},
+  booktitle = {Proc. 12th IEEE Symp. on Service-Oriented System Engineering (SOSE)},
+  year      = {2018},
+  doi       = {10.1109/SOSE.2018.00011}
+}
+
+% ═══════════════════════════════════════════════════════════════════════════════
+% SECTION 2E: Prompt Injection
+% ═══════════════════════════════════════════════════════════════════════════════
+
+% [CONFIRMED] — upgraded from arXiv to peer-reviewed venue
+@inproceedings{greshake2023prompt,
+  author    = {Greshake, Kai and Abdelnabi, Sahar and Mishra, Shailesh and Endres, Christoph and Holz, Thorsten and Fritz, Mario},
+  title     = {Not What You've Signed Up For: Compromising Real-World {LLM}-Integrated Applications with Indirect Prompt Injection},
+  booktitle = {Proc. Workshop on Artificial Intelligence and Security (AISec@CCS)},
+  year      = {2023},
+  doi       = {10.1145/3605764.3623985}
+}
+
+% [CONFIRMED]
+@inproceedings{liu2024prompt,
+  author    = {Liu, Yi and others},
+  title     = {Formalizing and Benchmarking Prompt Injection Attacks and Defenses},
+  booktitle = {Proc. USENIX Security Symposium},
+  year      = {2024}
+}
+
+% ═══════════════════════════════════════════════════════════════════════════════
+% C4 Notation
+% ═══════════════════════════════════════════════════════════════════════════════
+
+% [BOOK]
+@book{brown2018c4,
+  author    = {Brown, Simon},
+  title     = {Software Architecture for Developers, Volume 2: Visualise, document and explore your software architecture},
+  publisher = {LeanPub},
+  year      = {2018},
+  note      = {Available: \url{https://leanpub.com/visualising-software-architecture}}
+}
+
+% ═══════════════════════════════════════════════════════════════════════════════
+% Methodology
+% ═══════════════════════════════════════════════════════════════════════════════
+
+% [CONFIRMED]
+@article{kitchenham2001guidelines,
+  author  = {Kitchenham, Barbara A. and Pfleeger, Shari Lawrence and Pickard, Lesley M. and Jones, Peter W. and Hoaglin, David C. and El Emam, Khaled and Rosenberg, Jarrett},
+  title   = {Preliminary Guidelines for Empirical Research in Software Engineering},
+  journal = {IEEE Transactions on Software Engineering},
+  volume  = {28},
+  number  = {8},
+  pages   = {721--734},
+  year    = {2002},
+  month   = aug,
+  doi     = {10.1109/TSE.2002.1027796}
+}
+
+% [BOOK] [CONFIRMED]
+@book{shull2008guide,
+  author    = {Shull, Forrest and Singer, Janice and Sj{\o}berg, Dag I. K.},
+  title     = {Guide to Advanced Empirical Software Engineering},
+  publisher = {Springer},
+  year      = {2008},
+  doi       = {10.1007/978-1-84800-044-5}
+}
+
+% [CONFIRMED]
+@article{runeson2009case,
+  author  = {Runeson, Per and H{\"o}st, Martin},
+  title   = {Guidelines for conducting and reporting case study research in software engineering},
+  journal = {Empirical Software Engineering},
+  volume  = {14},
+  number  = {2},
+  pages   = {131--164},
+  year    = {2009},
+  doi     = {10.1007/s10664-008-9102-8}
+}
+
+% [CONFIRMED] — 2025 empirical SE writing guidance
+@inproceedings{verdecchia2025notes,
+  author    = {Verdecchia, Roberto and Bogner, Justus},
+  title     = {Notes On Writing Effective Empirical Software Engineering Papers},
+  booktitle = {Proc. IEEE/ACM Int. Conf. on Software Engineering (ICSE), Companion Volume},
+  year      = {2025}
+}
+
+% ═══════════════════════════════════════════════════════════════════════════════
+% Self-citation (anonymised for submission)
+% ═══════════════════════════════════════════════════════════════════════════════
+
+% ANON: Replace with real citation for camera-ready
+@inproceedings{anonymous2026issre,
+  author    = {[Anonymous]},
+  title     = {[Title withheld for double-anonymous review]},
+  booktitle = {Proc. IEEE Int. Symp. on Software Reliability Engineering (ISSRE)},
+  year      = {2026},
+  note      = {Details withheld for review}
+}
+
+@inproceedings{geng2023grammar,
+  author    = {Geng, Saibo and Josifoski, Martin and Peyrard, Maxime and West, Robert},
+  title     = {Grammar-Constrained Decoding for Structured {NLP} Tasks without Finetuning},
+  booktitle = {Proc. Conf. on Empirical Methods in Natural Language Processing (EMNLP)},
+  year      = {2023},
+  pages     = {10932--10952}
+}
+
+@techreport{rfc8693,
+  author       = {Jones, Michael and Nadalin, Anthony and Campbell, Brian and Bradley, John and Mortimore, Chuck},
+  title        = {{OAuth} 2.0 Token Exchange},
+  institution  = {IETF},
+  number       = {RFC 8693},
+  year         = {2020},
+  url          = {https://www.rfc-editor.org/rfc/rfc8693}
+}
+
+@misc{hashicorp2024vault,
+  author       = {{HashiCorp}},
+  title        = {Vault: Secrets Management and Data Protection},
+  year         = {2024},
+  howpublished = {\url{https://www.vaultproject.io/}},
+  note         = {Accessed 2026-07-31}
+}

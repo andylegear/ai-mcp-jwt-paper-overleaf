@@ -1,0 +1,201 @@
+% Section 6: Case Study
+% Source: context/Case_Study_OpenOrderbook.md (all sections §CS1-§CS9)
+% Source: context/Paper_Layout_Plan.md §6
+%
+% EM-DASH PROHIBITION: Do not use --- or \textemdash. Use colons or semicolons.
+
+\section{Industrial Case Study}\label{sec:case_study}
+
+This section addresses \RQ{5} using a mixed-method design: qualitative
+triangulation across five evidence sources is augmented by the ecological
+validity arm as an embedded controlled experiment (the no-Vault counterfactual).
+
+\subsection{Case Context}\label{sec:case_context}
+
+% ANON: All identifying details below are anonymised for double-anonymous review.
+% Camera-ready version will name the company, product, and personnel with consent.
+
+The case is a
+\anon{production blockchain trading platform}{production OpenOrderbook/Upstream Exchange platform}
+operated by
+\anon{a Swiss-based fintech company}{Abbey Technologies GmbH}
+serving approximately 13{,}000 registered users.
+% ANON: company name, product name, exchange name
+The platform provides fixed-return options trading in tokenised financial
+instruments through an AI-native interface: an LLM orchestrator translates
+trader instructions into on-chain operations via MCP tool chains. The
+blockchain infrastructure is a private Proof-of-Authority (PoA) Ethereum-compatible
+network with four active nodes.
+
+Authentication uses RS256~\cite{rfc7518} JWTs~\cite{rfc7519} issued by Azure AD B2C at approximately
+1{,}080 characters, placing the production tokens in the \emph{very long} tier
+of our experimental design (Section~\ref{sec:objects}). A single character
+corruption invalidates the RSA signature and produces an HTTP~403
+rejection at the downstream API~\cite{rfc6750}. The LLM configuration supports multiple
+providers (the controlled study includes Claude, GPT, and Gemini families);
+a local privacy-preserving mode using Gemma~4~E4B (4B-parameter open-weight,
+Ollama) is also supported for data-sovereignty deployments.
+
+\textbf{Concrete instantiation.}
+\texttt{[VP:~LLM]} = user-configurable model; \texttt{[VP:~Protected Resource]} = PoA
+Ethereum RPC + REST trading API; \texttt{[VP:~Credential-Bearing Tool]} = RS256
+signing service issuing Azure AD B2C JWTs.
+
+\subsection{Evidence Sources}\label{sec:evidence}
+
+Five independent evidence sources are triangulated. (1)~Production source code
+and git commit history provide an objective timeline of mitigations.
+(2)~Contemporaneous developer communications document the misdiagnosis phase
+and the qualitative observation that prompting ``gave better results.''
+(3)~A structured interview with
+\anon{the company's CEO and infrastructure engineer}{Brian Collins and Pete Hall}
+% ANON: personnel names
+provides architectural context and co-author fact verification.
+(4)~The ecological validity arm ($N\!=\!1{,}600$) serves a dual role: it
+quantifies the production-specific \DFR{} for the main study, and it
+constitutes the controlled counterfactual strand of this case study---the
+\emph{no-Vault} condition instantiated on the actual production system via
+an environment variable flag (\texttt{RESEARCH\_RAW\_MODE=true}), providing
+a quantified baseline against which the post-Vault observation is interpreted. (5)~Commit-level pre/post evidence confirms zero
+authentication failures after Vault deployment. No source contradicts another.
+
+\subsection{Discovery Trajectory}\label{sec:trajectory}
+
+JWT corruption was first observed on 2026-04-03 during UAT testing, eight days
+after the MCP server was first built. The observable symptom was intermittent
+\texttt{HTTP 403 Unauthorized} responses from the downstream REST API on
+authenticated trading operations. The intermittent failure rate was
+approximately 20\%, consistent with the very-long tier \DFR{} in the
+controlled study.
+
+\textbf{Misdiagnosis.}
+The failure was attributed to infrastructure: signatures failed
+\texttt{RSA.VerifyData()} against all six active JWKS keys. One key was 47 days
+old, leading to the hypothesis that Azure AD was issuing tokens with a stale
+private key; a Microsoft Support case was raised. The misdiagnosis was plausible:
+a JWT corrupted by single-character substitution is cryptographically
+indistinguishable from a token signed with an invalid key.
+
+\textbf{Root cause identification.}
+\anon{The lead developer}{Andrew Le Gear},
+% ANON: personnel name
+who had personally observed the corruption during testing, independently
+formed the LLM relay hypothesis from knowledge of how LLMs handle opaque,
+high-entropy strings. A diagnostic mechanism was added to the tool chain: the
+\texttt{acquire\_bearer\_token} tool was modified to return a
+\texttt{tokenFingerprint} (SHA256[:16] of the JWT), and a verification tool
+was added to compute the fingerprint of the received bearer token. Comparing
+fingerprints before and after LLM relay confirmed that the token was being
+altered in transit.
+
+\textbf{Prompting-first mitigation.}
+The initial response followed a prompting-first trajectory: a 318-character
+\texttt{CRITICAL} verbatim fidelity instruction was added to the
+\texttt{bearerToken} parameter in the tool registry. The instruction explicitly
+names the RSA signature consequence and the single-character precision
+requirement.
+The partial improvement confirmed the relay hypothesis but did not solve the
+problem. This is precisely the intervention evaluated in the ecological
+validity arm (Section~\ref{sec:eco_results}): the same 318-character
+instruction, the same production JWT schema, producing 19.9\% residual \DFR{}.
+
+\textbf{Architectural solution.}
+On 2026-04-13 (commit \texttt{5df1b265a}),
+\anon{the lead developer}{Le Gear}
+% ANON: personnel name
+deployed the Vault implementation, with the commit comment: \emph{``Bearer token
+vault: bypass the LLM to prevent token corruption. The LLM hallucinates data
+into JWT tokens (expanding claims, appending fake responses). We intercept the
+token from acquire\_bearer\_token results and inject it directly.''}
+This comment identifies two failure modes observed in production:
+(1)~semantic expansion, where the LLM hallucinated additional JSON claims
+into the JWT payload; and (2)~content fabrication, where the LLM appended
+fabricated tool-response content after the JWT. Both are consistent with the
+failure taxonomy in Table~\ref{tab:taxonomy}.
+
+The commit message uses no architectural pattern vocabulary; the solution was
+derived from first principles under production pressure. Pattern identification
+and naming were applied retrospectively, confirming the RA as a naturally
+emerging solution that this paper names, formalises, and validates.
+
+\subsection{Reactive Mitigations as Defence-in-Depth}\label{sec:reactive}
+
+Before the Vault was implemented, and retained alongside it as defence-in-depth,
+two reactive mitigation layers were added to the MCP handler. The first,
+\texttt{SanitizeBearerToken()}, handles structural failures: it extracts the
+\texttt{accessToken} field when the LLM passes the full JSON response object
+(case~1), strips non-Base64url characters appended after the signature
+(case~2), and removes \texttt{Bearer} prefix confusion (case~3). The second,
+\texttt{JwtValidator.ValidateAndRepairAsync()}, implements single-character
+brute-force repair of RS256 signatures: for each character position in the
+signature segment, it substitutes all 64 Base64url characters and tests
+\texttt{RSA.VerifyData()} against the JWKS keys. This repairs Levenshtein-1
+corruption in the signature segment but cannot repair multi-character corruption
+or payload-level semantic substitution.
+
+Table~\ref{tab:coverage} maps these layers against the failure taxonomy. The
+reactive mitigations cover format errors and low-Levenshtein signature
+corruption but cannot detect semantic substitution (\texttt{sem\_sub}), where
+the corrupted token is well-formed and plausible-length. The Vault is the only
+mechanism with complete coverage: it bypasses the failure mode entirely by
+removing the credential from the LLM's inference path.
+
+\begin{table}[t]
+\centering
+\footnotesize
+\vspace{-4pt}\caption{Defence-in-depth coverage matrix. Reactive mitigations cover a subset
+of failure modes; the Vault covers all by bypassing LLM relay.}
+\label{tab:coverage}
+\begin{tabular}{@{}lccc@{}}
+\toprule
+\textbf{Failure mode} & \textbf{Sanitize} & \textbf{Validator} & \textbf{Vault} \\
+\midrule
+JSON object relay        & \checkmark & Partial & \checkmark \\
+Trailing fabrication     & \checkmark & Partial & \checkmark \\
+Bearer prefix confusion  & \checkmark & Partial & \checkmark \\
+Char-level substitution  & $\times$   & \checkmark & \checkmark \\
+Multi-char corruption    & $\times$   & $\times$   & \checkmark \\
+Abstention / refusal     & $\times$   & $\times$   & \checkmark \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Ecological Validity}\label{sec:eco_results}
+
+The eco arm ($N\!=\!1{,}600$; 16 models $\times$ 100 iterations) is the
+controlled counterfactual for this case study. It used the exact production JWT
+schema (1{,}080-character RS256 Azure AD B2C token) and the verbatim
+318-character \texttt{BearerTokenParam} instruction from the production
+codebase, executed through the production software with Vault protection
+deliberately disabled. An environment variable flag (\texttt{RESEARCH\_RAW\_MODE=true}, commit
+\texttt{2396d5273}, 2026-07-07) bypasses both \texttt{SanitizeBearerToken()}
+and \texttt{JwtValidator}, forwarding the raw LLM output verbatim to the
+downstream API. The production binary is identical in both modes; only the
+runtime environment variable differs, ensuring the treatment and control
+conditions share the same code path and differ solely in the presence or
+absence of Vault interception. This design was necessary because the
+production mitigations are effective enough to mask the underlying failure:
+without deliberately disabling them, the raw \DFR{} is not observable.
+
+The eco arm \DFR{} was 19.9\%, a $+1.9$ percentage point difference from the
+main study ($p\!=\!0.16$, Wilcoxon; not
+significant). The Spearman rank correlation between eco arm and main experiment
+model rankings was $\rho\!=\!0.740$ ($p\!=\!0.001$), confirming that model
+rankings transfer to production conditions.
+
+\subsection{Post-Vault Deployment}\label{sec:post_vault}
+
+Zero JWT authentication failures have been recorded over the 88-day observation
+window from Vault deployment (2026-04-13) through 2026-07-10. Azure Monitor
+metrics record 4{,}774 MCP tool invocations during this window; at the eco
+arm's 19.9\% \DFR{}, approximately 950 would have failed without Vault
+protection. The eco arm (Section~\ref{sec:eco_results}) provides the quantified
+counterfactual on the same production system.
+The post-Vault zero-failure observation is interpreted against that baseline,
+not in isolation. This is a structural result, not a statistical one: the Vault
+eliminates the failure mode by removing the credential from the LLM's inference
+path. The expected post-Vault \DFR{} is not ``lower than 18.0\%'' but exactly
+zero by construction for the byte-relay property: the byte sequence injected
+into each outbound request is identical to the credential stored in the Vault.
+This guarantee does not extend to credential theft, token expiry, revocation,
+or replay attacks, which require independent controls.

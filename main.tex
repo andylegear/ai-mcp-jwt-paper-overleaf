@@ -1,0 +1,141 @@
+% ICSA 2027 Research Papers Track — Double-Anonymous Submission
+% Title: Verbatim Relay Fidelity of High-Entropy Credentials in LLM Tool Chains:
+%        An Empirical Study and Reference Architecture
+%
+% Template: IEEEtran conference class (IEEE two-column format)
+% Page limit: 10 pages main text (inclusive of figures, tables, appendices)
+%             + 2 additional pages containing only references
+%
+% ANONYMISATION POLICY:
+%   \anon{submitted text}{camera-ready text}
+%   First argument is rendered in the submitted (anonymous) version.
+%   Toggle to second argument for camera-ready by changing the macro definition.
+%   Every usage is marked with a comment: % ANON: description
+%
+% EM-DASH PROHIBITION: Never use --- or \textemdash anywhere in this paper.
+%   Use colons, semicolons, parentheses, or sentence restructuring instead.
+
+\documentclass[conference]{IEEEtran}
+
+% ─── Packages ────────────────────────────────────────────────────────────────
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{microtype}   % character protrusion + font expansion; saves ~3-5 lines
+\usepackage{enumitem}    % tight list spacing control
+\usepackage{etoolbox}    % \patchcmd for post-init heading spacing tweaks
+\usepackage{cite}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{url}
+\usepackage[hidelinks]{hyperref}
+\usepackage{balance}  % balance final page columns
+\usepackage{tabularx}
+
+% ─── Float and caption spacing (space saving) ────────────────────────────────
+\setlength{\textfloatsep}{6pt plus 2pt minus 4pt}
+\setlength{\floatsep}{4pt plus 2pt minus 2pt}
+\setlength{\dbltextfloatsep}{10pt plus 2pt minus 4pt}
+\setlength{\dblfloatsep}{6pt plus 2pt minus 2pt}
+\setlength{\abovecaptionskip}{2pt}
+\setlength{\belowcaptionskip}{-4pt}
+
+% ─── Section/subsection spacing — patched after IEEEtran's AtBeginDocument ──
+% IEEEtran (conf) defines these at \begin{document}; patchcmd runs afterwards.
+% Reduces after-skip (0.7ex→0.3ex) and before-skip (~0.5ex) across all headings.
+\AtBeginDocument{%
+  \patchcmd{\section}%
+    {0.7ex plus 1ex minus 0ex}%
+    {0.3ex plus 0.3ex minus 0ex}%
+    {}{}%
+  \patchcmd{\subsection}%
+    {0.7ex plus .5ex minus 0ex}%
+    {0.3ex plus 0.2ex minus 0ex}%
+    {}{}%
+}
+\usepackage{array}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, positioning, shapes.geometric, fit, backgrounds}
+
+% ─── Anonymisation Toggle ────────────────────────────────────────────────────
+% SUBMISSION VERSION (double-anonymous): renders first argument
+% For camera-ready: change to \newcommand{\anon}[2]{#2}
+\newcommand{\anon}[2]{#1}
+
+% ─── Convenience Macros ──────────────────────────────────────────────────────
+\newcommand{\RQ}[1]{\textbf{RQ#1}}
+\newcommand{\Contrib}[1]{\textbf{C#1}}
+\newcommand{\DFR}{\textrm{DFR}}
+\newcommand{\ie}{\textit{i.e.}\xspace}
+\newcommand{\eg}{\textit{e.g.}\xspace}
+\newcommand{\cf}{\textit{cf.}\xspace}
+
+% ─── Title ───────────────────────────────────────────────────────────────────
+\title{Verbatim Relay Fidelity of High-Entropy Credentials\\in LLM Tool Chains: An Empirical Study\\and Reference Architecture}
+
+% ─── Authors (anonymous for submission) ──────────────────────────────────────
+% ANON: Replace with real author block for camera-ready
+\author{
+  \IEEEauthorblockN{Anonymous Authors}
+  \IEEEauthorblockA{Paper ID: [To be assigned by EasyChair]\\
+  Double-anonymous submission to ICSA 2027 Research Papers Track}
+}
+
+% ─── Document ────────────────────────────────────────────────────────────────
+\begin{document}
+
+\maketitle
+
+% Abstract
+\input{sections/00_abstract}
+
+% Main sections
+\input{sections/01_introduction}
+\input{sections/02_related_work}
+\input{sections/03_study_design}
+\input{sections/04_results}
+\input{sections/05_reference_architecture}
+\input{sections/06_case_study}
+\input{sections/07_discussion}
+\input{sections/08_threats}
+\input{sections/09_conclusion}
+
+% ─── Acknowledgment (anonymous for submission) ───────────────────────
+% ANON: Uncomment for camera-ready version
+\vspace{-4pt}\section*{Acknowledgment}
+\vspace{-5pt}
+{\small\anon{This research was conducted within [anonymised], the [anonymised]
+Research Centre for Software, funded by [anonymised] under grant [anonymised]
+in conjunction with [anonymised] under statement of work [anonymised].}{This
+research was conducted within Lero, the Science Foundation Ireland Research
+Centre for Software, funded by Research Ireland (grant 13/RC/2094) (SOWP2-TP0063).}}
+
+\vspace{-6pt}\section*{Ethics Statement}
+\vspace{-5pt}
+{\small\anon{Ethical approval was granted by [institution withheld] under expedited
+review (reference withheld). The industry partner provided written consent for
+the case study.}{Ethical approval was granted by the University of Limerick
+Research Ethics Committee (ref.\ 2026-07-XX). Abbey Technologies GmbH provided
+written consent for the case study and for the company to be named.}}
+
+\vspace{-6pt}\section*{AI Disclosure}
+\vspace{-5pt}
+{\small Microsoft Copilot assisted with spelling and grammar; all intellectual
+content is the authors' own.}
+
+\vspace{-10pt}\section*{Data Availability}
+\vspace{-5pt}
+{\small Replication package:
+\anon{\url{https://anonymous.4open.science/r/jwt-mcp-replication-FF50/}}{\url{https://github.com/andylegear/jwt-mcp-replication}}.
+% ANON: Replace anonymous.4open.science URL with real GitHub URL for camera-ready
+Experiment database (${\approx}161$\,MB, 52{,}000 runs):
+\url{https://osf.io/5zd42/} (SHA-256: \texttt{ac1de7ac\ldots fdc5c0e}).}
+
+% ─── References ──────────────────────────────────────────────────────────────
+% \balance  % disabled: let columns be unequal so boilerplate stays on p10
+\bibliographystyle{IEEEtran}
+\bibliography{references}
+
+\end{document}

@@ -1,0 +1,15 @@
+*.aux
+*.bbl
+*.bbl-SAVE-ERROR
+*.blg
+*.log
+*.out
+*.synctex.gz
+*.fls
+*.fdb_latexmk
+*.toc
+*.lof
+*.lot
+*.nav
+*.snm
+*.vrb

@@ -1,0 +1,24 @@
+% Section: Abstract
+% Format: Verdecchia & Bogner (2025) structured abstract
+%
+% EM-DASH PROHIBITION: Do not use --- or \textemdash. Use colons or semicolons.
+
+\begin{abstract}
+Large Language Models operating as tool-chain orchestrators must relay
+high-entropy credentials such as JSON Web Tokens (JWTs) verbatim, yet their
+subword tokenisation is associated with systematic character-level corruption
+across a substantial fraction of attempts. We report a controlled experiment
+($N\!=\!48{,}000$ L2 runs across 16 frontier LLMs) measuring the JWT
+Defect/Failure Rate (DFR), an ecological validity arm ($N\!=\!1{,}600$)
+replicating the study under production conditions, and an industrial case study
+validating a novel reference architecture. The overall DFR is 18.0\% (range
+0.5--99.8\%; 12.5\% excluding the Mistral Large~3 outlier). Corruption is
+length-gated and payload-concentrated. Even the most explicit production
+instruction leaves a residual DFR of 19.9\% ($+1.9$~pp vs.\ neutral,
+$p\!=\!0.16$): a null result for the prompt-engineering mitigation tested under
+production conditions; formal equivalence testing remains future work. We propose the Credential Interception Vault, a
+reference architecture grounded in three design principles (deterministic
+shell/probabilistic core, credentials by reference, model-agnosticism) that
+removes the credential from the LLM inference path entirely, achieving zero
+byte-relay failures by construction and validated in a production fintech deployment.
+\end{abstract}

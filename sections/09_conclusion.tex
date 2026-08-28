@@ -1,0 +1,25 @@
+% Section 9: Conclusion
+% Source: context/Discussion_and_Conclusions.md §D11
+%
+% EM-DASH PROHIBITION: Do not use --- or \textemdash. Use colons or semicolons.
+
+\section{Conclusion}\label{sec:conclusion}
+
+LLM credential relay corruption is not an edge case. Across 50{,}400 main-arm runs
+with 16 frontier models, the JWT defect rate was 18.0\% (range 0.5--99.8\%;
+12.5\% excluding Mistral Large~3), with no model achieving zero corruption.
+The eco arm confirmed a residual \DFR{} of 19.9\% under the most explicit
+production instruction ($p\!=\!0.16$). The Credential Interception Vault
+eliminates the failure by removing the credential from inference; zero
+authentication failures have been recorded since deployment.
+
+The seven contributions (Section~\ref{sec:introduction}) span empirical
+characterisation (\Contrib{1}--\Contrib{4}), the Credential Interception Vault
+RA (\Contrib{5}), industrial validation (\Contrib{6}), and an open replication
+package (\Contrib{7}).
+
+Credential lengths are increasing~\cite{barker2020nistkeys,nist2024pqc},
+deepening the corruption risk. The Vault provides a principled, model-agnostic,
+and empirically validated answer. For practitioners building MCP tool chains:
+do not relay credentials exceeding $\sim$200 characters through LLM inference;
+intercept them deterministically at the middleware layer.
