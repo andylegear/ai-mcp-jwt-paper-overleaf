@@ -8,17 +8,16 @@ Large Language Models (LLMs) increasingly orchestrate tool chains that invoke
 external services. When such a chain carries an opaque cryptographic
 credential, such as a JSON Web Token (JWT), the credential must remain
 byte-for-byte unchanged: a one-character deviation can cause downstream
-authentication to fail. We report a controlled experiment of credential relay
-through LLM-mediated Model Context Protocol (MCP) tool chains
-($N\!=\!48{,}000$ L2 runs across 16 frontier LLMs), an ecological validity arm
-that reproduces a production setting ($N\!=\!1{,}600$), and an industrial case
+authentication to fail. We report a controlled experiment across
+LLM-mediated Model Context Protocol (MCP) tool chains ($N\!=\!48{,}000$ L2
+runs across 16 frontier LLMs), an ecological validity arm that reproduces a
+production setting ($N\!=\!1{,}600$), and an industrial case
 study. Across the controlled L2 runs, the JWT Defect/Failure Rate (DFR) was
 18.0\% (range 0.5--99.8\%; 12.5\% excluding the Mistral Large~3 outlier).
 Failures increased with credential length and were concentrated in the
 payload. In the production-condition arm, an explicit relay instruction left
-a residual DFR of 19.9\% (1.9 percentage points above the neutral condition,
-$p\!=\!0.16$), providing no evidence that the tested prompt-based mitigation
-eliminates the failure mode. To address this integrity risk, we propose the
+a residual DFR of 19.9\% ($+1.9$~pp, $p\!=\!0.16$), showing the mitigation
+does not eliminate the failure. To address this integrity risk, we propose the
 Credential Interception Vault, a reference architecture that separates
 deterministic credential handling from probabilistic LLM orchestration, uses
 credentials by reference, and is model-agnostic. By removing credentials from

@@ -23,20 +23,16 @@ cryptographic verification~\cite{rfc6750} and turn an otherwise valid tool
 invocation into a hard authentication failure. The resulting fault is
 operationally significant: the affected tool call fails, there is no
 meaningful near-miss credential, and format checks may not reveal every
-corrupted value before it reaches the downstream API.
-
-This is an architectural problem rather than merely an instruction-following
-problem. Established credential-propagation patterns assume that the relaying
-components preserve the credential value exactly. An LLM, however, is a
-probabilistic component that generates a new tool-call argument rather than
-acting as a transparent transport channel. Prompt instructions may encourage
-faithful relay, but they do not create a deterministic integrity guarantee.
-In systems where authentication, signing, or authorization depends on an
-exact value, placing the credential on this path introduces a failure mode
-that the architecture must address. In privacy-preserving architectures where
-authentication and signing occur locally and the resulting credential must be
-relayed through an LLM orchestrator to a remote API~\cite{anonymous2026issre},
-this failure mode is directly exposed.
+corrupted value before it reaches the downstream API. This is an
+architectural problem rather than an instruction-following problem:
+established credential-propagation patterns assume the relaying component
+preserves the value exactly, but an LLM is a probabilistic component that
+generates a new tool-call argument rather than acting as a transparent
+transport channel, and prompt instructions do not create a deterministic
+integrity guarantee. In privacy-preserving architectures where authentication
+and signing occur locally and the resulting credential must be relayed
+through an LLM orchestrator to a remote API~\cite{anonymous2026issre}, this
+failure mode is directly exposed.
 
 Existing work has examined unreliable LLM output, secret memorisation, and
 security risks in LLM-integrated systems~\cite{huang2025hallucination,
@@ -46,16 +42,6 @@ relayed through a live LLM tool chain, nor do they provide a reference
 architecture for removing that credential from the inference path. We
 therefore study the prevalence, character, and mitigability of JWT relay
 corruption, and evaluate an architectural response.
-
-Our response is the Credential Interception Vault, a reference architecture
-that moves integrity-critical credential handling to a deterministic
-boundary. Rather than requiring the LLM to reproduce a credential, the Vault
-retains the credential outside the inference path and provides a reference
-that deterministic infrastructure resolves when constructing the downstream
-request. The design follows three principles: a deterministic shell around a
-probabilistic core, credentials by reference, and model-agnosticism. It
-preserves the LLM's role in tool selection and orchestration while assigning
-byte-exact credential handling to components able to provide that property.
 
 We advance the following research proposition:
 
@@ -68,7 +54,7 @@ the inference path eliminates this direct relay failure mode in the studied
 systems, independently of the LLM used.}
 \end{quote}
 
-We structure the investigation around five research questions:
+We structure the investigation around three research questions:
 
 \begin{itemize}[itemsep=1pt,parsep=0pt,topsep=2pt]
   \item \RQ{1}: How prevalent is JWT corruption in LLM-mediated MCP relay, and
@@ -77,11 +63,12 @@ We structure the investigation around five research questions:
     events distributed across credential structure and length?
   \item \RQ{3}: To what extent can prompt-engineering mitigations reduce JWT
     corruption, and why do they not establish an integrity guarantee?
-  \item \RQ{4}: How does the Credential Interception Vault reference
-    architecture structurally eliminate the direct credential-relay failure mode?
-  \item \RQ{5}: How is the Vault operationalised in production, and what
-    evidence demonstrates its effectiveness?
 \end{itemize}
+
+Motivated by these findings, we further present and validate a reference
+architecture, the Credential Interception Vault, that removes the credential
+from the LLM inference path and eliminates the direct relay failure mode by
+construction (Sections~\ref{sec:reference_architecture}--\ref{sec:case_study}).
 
 This paper makes seven contributions.
 The primary goal is to establish that the failure occurs at meaningful scale
@@ -110,5 +97,5 @@ future work (Section~\ref{sec:conclusion}).
 
 Section~\ref{sec:related_work} surveys related work; Section~\ref{sec:study_design}
 presents the design; Section~\ref{sec:results} reports \RQ{1}--\RQ{3}.
-Sections~\ref{sec:reference_architecture}--\ref{sec:case_study} present the Vault RA and case study (\RQ{4}--\RQ{5}).
+Sections~\ref{sec:reference_architecture}--\ref{sec:case_study} present the Vault RA and case study.
 Sections~\ref{sec:discussion}--\ref{sec:conclusion} discuss, address threats, and conclude.
