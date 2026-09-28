@@ -15,7 +15,7 @@ carry values from one tool invocation to the next. This arrangement is useful
 for multi-step workflows, but it can place an LLM on a path that was
 traditionally handled by deterministic software components.
 
-One such path carries opaque cryptographic credentials, including JSON Web
+\revjb{This relay path} carries opaque cryptographic credentials, including JSON Web
 Tokens (JWTs)~\cite{rfc7519,rfc7518}. These values are not instructions for
 the LLM to interpret; they are integrity-critical data that a downstream
 service must receive unchanged. A single altered character can invalidate
@@ -41,7 +41,8 @@ important but do not characterise the runtime integrity of a novel credential
 relayed through a live LLM tool chain, nor do they provide a reference
 architecture for removing that credential from the inference path. We
 therefore study the prevalence, character, and mitigability of JWT relay
-corruption, and evaluate an architectural response.
+corruption, and evaluate an architectural response \revjb{we call the Credential
+Interception Vault}.
 
 We advance the following research proposition:
 
@@ -65,25 +66,22 @@ We structure the investigation around three research questions:
     corruption, and why do they not establish an integrity guarantee?
 \end{itemize}
 
-Motivated by these findings, we further present and validate a reference
-architecture, the Credential Interception Vault, that removes the credential
+Motivated by these findings, we further present and validate \revjb{this
+architecture}, \revjb{which removes} the credential
 from the LLM inference path and eliminates the direct relay failure mode by
 construction (Sections~\ref{sec:reference_architecture}--\ref{sec:case_study}).
 
-This paper makes seven contributions.
-The primary goal is to establish that the failure occurs at meaningful scale
-and that an architectural solution eliminates direct credential relay; causal
-attribution of the underlying mechanism remains a declared direction for
-future work (Section~\ref{sec:conclusion}).
+This paper makes seven contributions:
 \begin{enumerate}[itemsep=1pt,parsep=0pt,topsep=2pt]
     \item An empirical characterisation of JWT relay fidelity across 16
-      frontier LLMs in 48{,}000 controlled L2 runs, producing a cross-model
+      frontier LLMs in 48{,}000 controlled \revjb{tool-chain} runs, producing a cross-model
       defect rate ranking (\Contrib{1}).
     \item A failure taxonomy distinguishing six outcome types with
       security severity ordering (\Contrib{2}).
     \item A corruption characterisation identifying length-related and
       credential-segment concentration patterns, providing empirical evidence
-      for examining the underlying mechanism (\Contrib{3}).
+      \revjb{for prioritizing which credential-relay patterns warrant further
+      mechanistic investigation} (\Contrib{3}).
     \item An evaluation of prompt-based mitigation showing that the tested
       explicit production instruction does not eliminate corruption (19.9\%
       residual \DFR{} under production instruction conditions) (\Contrib{4}).
@@ -94,6 +92,10 @@ future work (Section~\ref{sec:conclusion}).
       production blockchain trading system (\Contrib{6}).
     \item An open replication package (\Contrib{7}).
 \end{enumerate}
+\revjb{The primary goal of this work is to determine if the failure occurs at a
+meaningful rate and to identify an architectural solution that eliminates
+direct credential relay; causal attribution of the underlying mechanism is
+identified as a direction for future work} (Section~\ref{sec:conclusion}).
 
 Section~\ref{sec:related_work} surveys related work; Section~\ref{sec:study_design}
 presents the design; Section~\ref{sec:results} reports \RQ{1}--\RQ{3}.
